@@ -18,7 +18,7 @@ class TweetGrabber():
         API_results = self.api.search(q=keyword,rpp=1000,show_user=True,tweet_mode='extended')
 
         with open(f'{csv_prefix}.csv', 'w', newline='') as csvfile:
-            fieldnames = ['tweet_id', 'tweet_text', 'date', 'user_id', 'follower_count',
+            fieldnames = ['tweet_id', 'keyword','tweet_text', 'date', 'user_id', 'follower_count',
                           'retweet_count','user_mentions']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
@@ -28,13 +28,16 @@ class TweetGrabber():
                 date = tweet.created_at.strftime('%m/%d/%Y')        
                 writer.writerow({
                                 'tweet_id': tweet.id_str,
+                                'keyword': keyword,
                                 'tweet_text': text,
                                 'date': date,
                                 'user_id': tweet.user.id_str,
                                 'follower_count': tweet.user.followers_count,
                                 'retweet_count': tweet.retweet_count,
                                 'user_mentions':tweet.entities['user_mentions']
-                                })        
+                                })   
+        return API_results
+
         
     def user_search(self,user,csv_prefix):
         import csv
